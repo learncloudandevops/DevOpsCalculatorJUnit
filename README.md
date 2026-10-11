@@ -45,3 +45,5 @@ The test suite contains five tests: addition, subtraction, multiplication, divis
 In `CalculatorTest.java`, temporarily change the expected value in `addsTwoNumbers()` from `15` to `16`. Run `mvn test` and observe the failure. Change it back to `15` and run the tests again.
 
 JUnit tests the `Calculator` class directly. The application source does not need to change to add tests.
+
+Also this supports Jenkins file
