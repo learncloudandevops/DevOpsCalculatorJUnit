@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -27,10 +28,37 @@ pipeline {
             }
         }
 
+        stage('Verify JaCoCo Report') {
+            steps {
+                sh '''
+                    echo "=== Check JaCoCo XML report ==="
+
+                    if [ ! -f target/site/jacoco/jacoco.xml ]; then
+                        echo "ERROR: JaCoCo XML report was not generated."
+                        exit 1
+                    fi
+
+                    ls -lh target/site/jacoco/jacoco.xml
+
+                    echo "=== Check CalculatorApp exclusion ==="
+
+                    if grep -q 'name="CalculatorApp"' target/site/jacoco/jacoco.xml; then
+                        echo "CalculatorApp is PRESENT in the report"
+                    else
+                        echo "CalculatorApp is NOT PRESENT in the report"
+                    fi
+                '''
+            }
+        }
+
         stage('SonarQube Analysis') {
             steps {
-                withCredentials([string(credentialsId: 'sonar-token',
-                                        variable: 'SONAR_TOKEN')]) {
+                withCredentials([
+                    string(
+                        credentialsId: 'sonar-token',
+                        variable: 'SONAR_TOKEN'
+                    )
+                ]) {
                     sh '''
                         mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
                           -Dsonar.projectKey=devops-calculator \
@@ -49,11 +77,13 @@ pipeline {
             junit allowEmptyResults: true,
                   testResults: '**/target/surefire-reports/*.xml'
         }
+
         success {
-            echo 'Build, tests, and SonarQube analysis completed.'
+            echo 'Build, tests, JaCoCo report verification, and SonarQube analysis completed successfully.'
         }
+
         failure {
-            echo 'Pipeline failed. Review the stage logs.'
+            echo 'Pipeline failed. Review the stage logs to identify the issue.'
         }
     }
 }
