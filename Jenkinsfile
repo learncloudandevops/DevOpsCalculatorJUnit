@@ -36,7 +36,8 @@ pipeline {
                           -Dsonar.projectKey=devops-calculator \
                           -Dsonar.projectName="DevOps Calculator" \
                           -Dsonar.host.url="$SONAR_HOST_URL" \
-                          -Dsonar.token="$SONAR_TOKEN"
+                          -Dsonar.token="$SONAR_TOKEN" \
+                          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                     '''
                 }
             }
