@@ -1,3 +1,4 @@
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -7,15 +8,28 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>devops-calculator-junit</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>DevOpsCalculator</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>DevOps Calculator</name>
+    <description>Calculator project for DevOps CI/CD training</description>
 
     <properties>
-        <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>21</maven.compiler.release>
         <junit.version>5.11.4</junit.version>
         <jacoco.version>0.8.12</jacoco.version>
     </properties>
+
+    <!-- Nexus repository for publishing release artifacts -->
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>Nexus Releases</name>
+            <url>http://nexus.leancloudandevops.online:8081/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -28,8 +42,7 @@
 
     <build>
         <plugins>
-
-            <!-- Compile the application using Java 21 -->
+            <!-- Compile with Java 21 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -46,25 +59,17 @@
                 <version>3.5.2</version>
             </plugin>
 
-            <!-- Measure code coverage and generate the JaCoCo report -->
+            <!-- Generate JaCoCo code coverage reports -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
-
-                <configuration>
-                    <excludes>
-                        <exclude>com/example/CalculatorApp.class</exclude>
-                    </excludes>
-                </configuration>
-
                 <executions>
                     <execution>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
-
                     <execution>
                         <id>generate-coverage-report</id>
                         <phase>verify</phase>
@@ -73,9 +78,14 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>com/example/CalculatorApp.class</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
-
         </plugins>
     </build>
 
 </project>
+```
