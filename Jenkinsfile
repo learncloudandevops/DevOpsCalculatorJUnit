@@ -71,6 +71,41 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to Nexus') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'nexususer',
+                        usernameVariable: 'NEXUS_USERNAME',
+                        passwordVariable: 'NEXUS_PASSWORD'
+                    )
+                ]) {
+                    sh '''
+                        set +x
+
+                        SETTINGS_FILE="$(mktemp)"
+                        trap 'rm -f "$SETTINGS_FILE"' EXIT
+
+                        cat > "$SETTINGS_FILE" <<EOF
+<settings>
+    <servers>
+        <server>
+            <id>nexus-releases</id>
+            <username>${NEXUS_USERNAME}</username>
+            <password>${NEXUS_PASSWORD}</password>
+        </server>
+    </servers>
+</settings>
+EOF
+
+                        chmod 600 "$SETTINGS_FILE"
+
+                        mvn -B -s "$SETTINGS_FILE" deploy
+                    '''
+                }
+            }
+        }
     }
 
     post {
@@ -80,7 +115,7 @@ pipeline {
         }
 
         success {
-            echo 'Build, tests, JaCoCo report verification, and SonarQube analysis completed successfully.'
+            echo 'Build, tests, JaCoCo verification, SonarQube analysis, and Nexus deployment completed successfully.'
         }
 
         failure {
