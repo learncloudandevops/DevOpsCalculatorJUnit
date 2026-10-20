@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -8,7 +9,7 @@
 
     <groupId>com.example</groupId>
     <artifactId>DevOpsCalculator</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <name>DevOps Calculator</name>
@@ -41,6 +42,7 @@
 
     <build>
         <plugins>
+
             <!-- Compile with Java 21 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -83,6 +85,21 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+            <!-- Create an executable JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.example.CalculatorApp</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
